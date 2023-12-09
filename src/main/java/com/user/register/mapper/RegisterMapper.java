@@ -1,9 +1,7 @@
-package com.user.register;
+package com.user.register.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import com.user.register.entity.User;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Optional;
 
@@ -19,7 +17,10 @@ public interface RegisterMapper {
     @Select("SELECT * FROM users WHERE email = #{email}")
     Optional<User> findByEmail(String email);
 
-    @Insert("INSERT INTO users (name, email, addressID, age) VALUES (#{name}, #{email}, #{addressId}, #{age})")
+    @Insert("INSERT INTO users (name, email, addressId, age) VALUES (#{name}, #{email}, #{addressId}, #{age})")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void insert(User user);
+
+    @Update("UPDATE users SET name = #{name}, email = #{email}, addressId = #{addressId}, age = #{age} WHERE id = #{id} ")
+    int updateUser(User existingUser);
 }
