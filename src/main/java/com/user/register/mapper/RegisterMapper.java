@@ -23,4 +23,7 @@ public interface RegisterMapper {
 
     @Update("UPDATE users SET name = #{name}, email = #{email}, addressId = #{addressId}, age = #{age} WHERE id = #{id} ")
     int updateUser(User existingUser);
+
+    @Delete("DELETE FROM users WHERE id = #{id}")
+    int deleteUser(Integer id);
 }

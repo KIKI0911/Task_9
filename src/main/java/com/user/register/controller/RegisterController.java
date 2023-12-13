@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 @RequestMapping("/users")
 @RestController
@@ -53,6 +54,15 @@ public class RegisterController {
         RegisterResponse body = new RegisterResponse("user updated");
         return ResponseEntity.ok(body);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RegisterResponse> delete(@PathVariable("id") Integer id, UriComponentsBuilder uriBuilder) {
+        int deletedRegisterUserData = registerService.deleteUser(id);
+        URI location = uriBuilder.path("/users/{id}").buildAndExpand(id).toUri();
+        RegisterResponse body = new RegisterResponse("user deleted");
+        return ResponseEntity.ok(body);
+    }
+
 
     @ExceptionHandler(value = UserNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleUserNotFoundException(
