@@ -1,5 +1,11 @@
-package com.user.register;
+package com.user.register.controller;
 
+import com.user.register.controller.request.RegisterRequest;
+import com.user.register.controller.response.RegisterResponse;
+import com.user.register.entity.User;
+import com.user.register.exception.UserAlreadyExistsException;
+import com.user.register.exception.UserNotFoundException;
+import com.user.register.service.RegisterService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +44,14 @@ public class RegisterController {
         URI location = uriBuilder.path("/users/{id}").buildAndExpand(user.getId()).toUri();
         RegisterResponse body = new RegisterResponse("user created");
         return ResponseEntity.created(location).body(body);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RegisterResponse> update(@PathVariable("id") Integer id, @RequestBody RegisterRequest registerRequest, UriComponentsBuilder uriBuilder) {
+        User updatedRegisterUserData = registerService.updateUser(id, registerRequest);
+        URI location = uriBuilder.path("/users/{id}").buildAndExpand(id).toUri();
+        RegisterResponse body = new RegisterResponse("user updated");
+        return ResponseEntity.ok(body);
     }
 
     @ExceptionHandler(value = UserNotFoundException.class)

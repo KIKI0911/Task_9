@@ -1,5 +1,10 @@
-package com.user.register;
+package com.user.register.service;
 
+import com.user.register.controller.request.RegisterRequest;
+import com.user.register.entity.User;
+import com.user.register.exception.UserAlreadyExistsException;
+import com.user.register.exception.UserNotFoundException;
+import com.user.register.mapper.RegisterMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,5 +45,23 @@ public class RegisterService {
         User user = new User(null, name, email, addressId, age);
         registerMapper.insert(user);
         return user;
+    }
+
+    public User updateUser(Integer id, RegisterRequest updatedUser) {
+        User existingUser = this.registerMapper.findUser(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found"));
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setAddressId(updatedUser.getAddressId());
+        existingUser.setAge(updatedUser.getAge());
+
+        int affectedRows = registerMapper.updateUser(existingUser);
+
+        if (affectedRows <= 0) {
+            // 更新が失敗した場合は例外をスローするか、エラーハンドリングを行う
+            throw new RuntimeException("Failed to update user with id: " + id);
+        }
+        return existingUser;
     }
 }

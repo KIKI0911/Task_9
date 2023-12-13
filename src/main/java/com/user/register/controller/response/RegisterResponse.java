@@ -1,4 +1,4 @@
-package com.user.register;
+package com.user.register.controller.response;
 
 public class RegisterResponse {
     private String message;
