@@ -64,4 +64,10 @@ public class RegisterService {
         }
         return existingUser;
     }
+
+    public int deleteUser(Integer id) {
+        this.registerMapper.findUser(id)
+                .orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found"));
+        return this.registerMapper.deleteUser(id);
+    }
 }
